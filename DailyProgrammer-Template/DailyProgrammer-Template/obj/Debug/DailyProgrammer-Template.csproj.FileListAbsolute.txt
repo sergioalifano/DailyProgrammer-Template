@@ -6,3 +6,11 @@ C:\Users\dustin\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Templa
 C:\Users\dustin\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\obj\Debug\DailyProgrammer-Template.csprojResolveAssemblyReference.cache
 C:\Users\dustin\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\obj\Debug\DailyProgrammer-Template.exe
 C:\Users\dustin\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\obj\Debug\DailyProgrammer-Template.pdb
+C:\Users\Technologist\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\bin\Debug\DailyProgrammer-Template.exe.config
+C:\Users\Technologist\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\obj\Debug\DailyProgrammer-Template.exe
+C:\Users\Technologist\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\obj\Debug\DailyProgrammer-Template.pdb
+C:\Users\Technologist\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\bin\Debug\DailyProgrammer-Template.exe
+C:\Users\Technologist\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\bin\Debug\DailyProgrammer-Template.pdb
+C:\Users\Technologist\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\bin\Debug\nunit.framework.dll
+C:\Users\Technologist\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\bin\Debug\nunit.framework.xml
+C:\Users\Technologist\Documents\GitHub\DailyProgrammer-Template\DailyProgrammer-Template\DailyProgrammer-Template\obj\Debug\DailyProgrammer-Template.csprojResolveAssemblyReference.cache
