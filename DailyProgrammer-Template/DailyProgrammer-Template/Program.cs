@@ -79,8 +79,21 @@ namespace DailyProgrammer_Template
                 }
                 Console.WriteLine();
             }
+
             //show the winner
-            Console.WriteLine("The winner is: "+TheWinnerIs(listOfPlayers).Name );
+            List<Player> winner=TheWinnerIs(listOfPlayers);
+            if (winner.Count == 1)
+            {
+                Console.WriteLine("The winner is: " + winner.First().Name);
+            }
+            else
+            {
+                Console.WriteLine("It's a tie! Winners are: ");
+                foreach (Player player in winner)
+                {
+                    Console.WriteLine(player.Name);
+                }
+            }
 
             Console.ReadKey();
         }//end of main
@@ -107,18 +120,28 @@ namespace DailyProgrammer_Template
         /// </summary>
         /// <param name="listOfPlayers"></param>
         /// <returns></returns>
-        public static Player TheWinnerIs(List<Player> listOfPlayers)
+        public static List<Player> TheWinnerIs(List<Player> listOfPlayers)
         {
             List<Player> notBusted = new List<Player>();
+            List<Player> fiveCardsTrick = new List<Player>();
 
-            //list of player with rank<=21
+            //filter the player with sum<=21
             notBusted = listOfPlayers.Where(x => x.GetRankSum() <= 21).ToList();
 
-            int max = notBusted.Max(x => x.GetRankSum());
-            return notBusted.Where(x => x.GetRankSum() == max).ToList().First();
-        }
+            //select players with exactly 5 cards
+            fiveCardsTrick = notBusted.Where(x => x.MyCards.Count == 5).ToList();
 
-       
+            if (fiveCardsTrick.Count >= 1)
+            {
+                return fiveCardsTrick;
+            }
+
+            //find the value of the max rank
+            int max = notBusted.Max(x => x.GetRankSum());
+
+            //return all the players whit the highest rank
+            return notBusted.Where(x => x.GetRankSum() == max).ToList();
+        }    
     }
 
     public enum Suit
@@ -256,23 +279,64 @@ namespace DailyProgrammer_Template
     [TestFixture]
     class Test
     {
+        Player sergio = new Player("Sergio");
+        Player jim = new Player("Jim");
+        List<Player> listOfPlayers = new List<Player>();       
+        List<Card> cardS = new List<Card>();
+        List<Card> cardJ = new List<Card>();
+
         //Test classes are declared with a return type of void.  Test classes also need a data annotation to mark them as a Test function
         [Test]
         public void MyValidTest()
         {
-            //inside of the test, we can declare any variables that we'll need to test.  Typically, we will reference a function in your main program to test.
-            int result = Program.MyTestFunction(15);  // this function should return 15 if it is working correctly
-            //now we test for the result.
-            Assert.IsTrue(result == 15, "This is the message that displays if it does not pass");
-            // The format is:
-            // Assert.IsTrue(some boolean condition, "failure message");
+
+            cardS.Clear();
+            cardJ.Clear();
+
+            cardS.Add(new Card((int)Rank.Ten, (int)Suit.Club));
+            cardS.Add(new Card((int)Rank.Jack, (int)Suit.Club));
+            cardS.Add(new Card((int)Rank.Ace, (int)Suit.Club));
+            sergio.DrawHand(cardS);
+            listOfPlayers.Add(sergio);
+
+            cardJ.Add(new Card((int)Rank.Five, (int)Suit.Club));
+            cardJ.Add(new Card((int)Rank.Jack, (int)Suit.Club));
+            cardJ.Add(new Card((int)Rank.Two, (int)Suit.Club));
+            jim.DrawHand(cardJ);    
+            listOfPlayers.Add(jim);
+
+            string winner = Program.TheWinnerIs(listOfPlayers).First().Name;
+            Assert.IsTrue(winner == "Jim", "Failed");
         }
 
         [Test]
         public void MyInvalidTest()
         {
-            int result = Program.MyTestFunction(15);
-            Assert.IsFalse(result == 14);
+            cardS.Clear();
+            cardJ.Clear();
+
+            cardS.Add(new Card((int)Rank.Two, (int)Suit.Club));
+            cardS.Add(new Card((int)Rank.Three, (int)Suit.Club));
+            cardS.Add(new Card((int)Rank.Five, (int)Suit.Club));
+            cardS.Add(new Card((int)Rank.Six, (int)Suit.Club));
+            cardS.Add(new Card((int)Rank.Five, (int)Suit.Heart));
+            sergio.DrawHand(cardS);
+
+            cardJ.Add(new Card((int)Rank.Five, (int)Suit.Club));
+            cardJ.Add(new Card((int)Rank.Jack, (int)Suit.Club));
+            cardJ.Add(new Card((int)Rank.Two, (int)Suit.Club));
+            jim.DrawHand(cardJ);
+
+            listOfPlayers.Clear();
+
+            listOfPlayers.Add(sergio);
+            listOfPlayers.Add(jim);
+
+            string winner = Program.TheWinnerIs(listOfPlayers).First().Name;
+            //int result = Program.MyTestFunction(15);
+
+
+            Assert.IsFalse(winner=="Jim");
         }
     }
 #endregion
