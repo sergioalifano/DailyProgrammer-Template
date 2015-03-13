@@ -3,45 +3,161 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using NUnit.Framework; //test classes need to have the using statement
 
-///     REDDIT DAILY PROGRAMMER SOLUTION TEMPLATE 
-///                             http://www.reddit.com/r/dailyprogrammer
-///     Your Name: 
-///     Challenge Name:
-///     Challenge #: 
-///     Challenge URL: 
-///     Brief Description of Challenge:
-///
-/// 
-///
-///     What was difficult about this challenge?
-/// 
-///
-///     
-///
-///     What was easier than expected about this challenge?
-///     
-///
-///
-///
-///     BE SURE TO CREATE AT LEAST TWO TESTS FOR YOUR CODE IN THE TEST CLASS
-///     One test for a valid entry, one test for an invalid entry.
+
 
 namespace DailyProgrammer_Template
 {
     class Program
     {
         static List<Player> listOfPlayers;
+		
+		public static List<string> listStringDate = new List<string>();
+        public static List<DateTime> listDateTime = new List<DateTime>();
 
         static void Main(string[] args)
         {
-            Deck myDeck = new Deck();
-            myDeck.Shuffle();
+            //FIRST CHALLANGE
+            //initialize the game
+            InitGame();
 
+            //show the cards of the player
+            ShowHand();
+
+            //show the winner
+            DisplayWinner();
+
+			//SECOND CHALLANGE
+			//read from file
+            readFile();
+            
+            //convert each string in DateTime type
+            foreach (string s in listStringDate)
+            {
+                listDateTime.Add(Convert.ToDateTime(s));
+            }
+
+            sortDate();
+
+            writeOnFile();
+            Console.ReadKey();
+        } //end main
+
+       
+
+        ///     REDDIT DAILY PROGRAMMER SOLUTION TEMPLATE 
+        ///                             http://www.reddit.com/r/dailyprogrammer
+        ///     Your Name: Sergio
+        ///     Challenge Name: [Intermediate]Date Sorting
+        ///     Challenge #: 112
+        ///     Challenge URL: http://www.reddit.com/r/dailyprogrammer/comments/137f87/11142012_challenge_112_intermediatedate_sorting/
+        ///     Brief Description of Challenge:
+        ///     The program take a list of string date and sort the date in ascendig way. I modified a little bit the input and the output
+        ///     in order to read from and write to a file
+        ///
+        /// 
+        ///
+        ///     What was difficult about this challenge?
+        ///     Nothing in particular
+        ///
+        ///     
+        ///
+        ///     What was easier than expected about this challenge?
+        ///     I don't think it was intermediate. Wrong choice. I'll choose a better one next time! 
+        ///
+        ///
+        ///
+        ///     BE SURE TO CREATE AT LEAST TWO TESTS FOR YOUR CODE IN THE TEST CLASS
+        ///     One test for a valid entry, one test for an invalid entry.
+        ///     
+
+        /// <summary>
+        /// read from the file and populate list of date
+        /// </summary>
+        public static void readFile()
+        {
+            StreamReader reader = new StreamReader("date_list.txt");
+
+            // Read all the file
+            while (!reader.EndOfStream)
+            {
+                //add each line to the list 
+                listStringDate.Add(reader.ReadLine());
+            }
+        }
+
+        //write on a new file the ordered dates
+        public static void writeOnFile()
+        {
+            using (StreamWriter writer = new StreamWriter("date sorted ascending.txt"))
+            {
+                foreach (DateTime date in listDateTime)
+                {
+                    writer.WriteLine(date);
+                }
+            }
+        }
+
+        /// <summary>
+        /// sort list of date in ascending way
+        /// </summary>
+        public static void sortDate()
+        {
+            listDateTime.Sort((a, b) => a.CompareTo(b));
+        }
+
+
+
+
+
+
+
+        ///     REDDIT DAILY PROGRAMMER SOLUTION TEMPLATE 
+        ///                             http://www.reddit.com/r/dailyprogrammer
+        ///     Your Name: Sergio
+        ///     Challenge Name: BlackJack Checker
+        ///     Challenge #: 170
+        ///     Challenge URL: http://www.reddit.com/r/dailyprogrammer/comments/29zut0/772014_challenge_170_easy_blackjack_checker/
+        ///     Brief Description of Challenge:
+        ///     Calculate the value of your card and pick the winner. There is a small change of the normal rules of Black Jack: the 
+        ///     player that has exactly 5 cards with a value less or equal to 21 automatically wins.
+        ///     I made another modification not about the rules but how to choose the cards: cards are picked random and players does't know
+        ///     how many cards will be given
+        ///
+        ///
+        ///     What was difficult about this challenge?
+        ///     Find the more efficient way to find the winner using lambda expressions
+        ///     Keep the code organized
+        ///
+        ///     
+        ///
+        ///     What was easier than expected about this challenge?
+        ///     I actually reused classes we already created for poker. I'm trying to get gradually more skills using classes for 
+        ///     poker game because I want to create a "real" poker game using graphic and AI
+        ///
+        ///
+        ///
+        ///     BE SURE TO CREATE AT LEAST TWO TESTS FOR YOUR CODE IN THE TEST CLASS
+        ///     One test for a valid entry, one test for an invalid entry.
+
+
+
+
+
+        /// <summary>
+        /// Initialize the game and ask for name players
+        /// </summary>
+        public static void InitGame()
+        {
             int numberOfPlayers;
             bool invalidInput = true;
-            
+
+            //create a new deck
+            Deck myDeck = new Deck();
+            //shuffle the deck
+            myDeck.Shuffle();
 
             while (invalidInput)
             {
@@ -68,64 +184,61 @@ namespace DailyProgrammer_Template
                     Console.WriteLine("Invalid input");
                 }
             }
+        }
 
+
+        /// <summary>
+        /// Show the cards of each player
+        /// </summary>
+        static void ShowHand()
+        {
             //show the cards for each player
             foreach (Player player in listOfPlayers)
             {
-                Console.Write(player.Name+": ");
+                Console.Write("\n"+player.Name + ": ");
                 foreach (Card card in player.MyCards)
                 {
-                    Console.Write(card.Rank+" ");
+                    Console.Write(card.Rank + " of "+ card.Suit+" ");
                 }
                 Console.WriteLine();
             }
+        }
 
-            //show the winner
-            List<Player> winner=TheWinnerIs(listOfPlayers);
+        static void DisplayWinner()
+        {
+            //Call the function that calculate the winner(s)
+            List<Player> winner = TheWinnerIs(listOfPlayers);
+            //if there is at least a winner
             if (winner.Count == 1)
             {
-                Console.WriteLine("The winner is: " + winner.First().Name);
+                Console.WriteLine("\nThe winner is: " + winner.First().Name);
             }
-            else
+                //if it's a tie
+            else if (winner.Count > 1)
             {
-                Console.WriteLine("It's a tie! Winners are: ");
+                Console.WriteLine("\nIt's a tie! Winners are: ");
                 foreach (Player player in winner)
                 {
                     Console.WriteLine(player.Name);
                 }
             }
-
-            Console.ReadKey();
-        }//end of main
-
-
-
-
+            else
+            {
+                Console.WriteLine("\nNo winner. All busted!!");
+            }
+        }        
 
         /// <summary>
-        /// Simple function to illustrate how to use tests
+        /// Calculate the winner
         /// </summary>
-        /// <param name="inputInteger"></param>
-        /// <returns></returns>
-        public static int MyTestFunction(int inputInteger)
-        {
-            return inputInteger;
-        }
-
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="listOfPlayers"></param>
-        /// <returns></returns>
+        /// <param name="listOfPlayers">List of players</param>
+        /// <returns>A list with one or more winners</returns>
         public static List<Player> TheWinnerIs(List<Player> listOfPlayers)
         {
             List<Player> notBusted = new List<Player>();
             List<Player> fiveCardsTrick = new List<Player>();
 
-            //filter the player with sum<=21
+            //filter the player with sum <= 21
             notBusted = listOfPlayers.Where(x => x.GetRankSum() <= 21).ToList();
 
             //select players with exactly 5 cards
@@ -136,11 +249,17 @@ namespace DailyProgrammer_Template
                 return fiveCardsTrick;
             }
 
-            //find the value of the max rank
-            int max = notBusted.Max(x => x.GetRankSum());
+            //if there is at leat a winner
+            if (notBusted.Count > 0)
+            {
+                //find the value of the max rank
+                int max = notBusted.Max(x => x.GetRankSum());
 
-            //return all the players whit the highest rank
-            return notBusted.Where(x => x.GetRankSum() == max).ToList();
+                //return all the players with the highest rank
+                return notBusted.Where(x => x.GetRankSum() == max).ToList();
+            }
+            else
+                return notBusted;
         }    
     }
 
@@ -159,24 +278,13 @@ namespace DailyProgrammer_Template
 
     class Card
     {
-        //Rank aceValue;
         public Suit Suit { get; set; }
-        public Rank Rank
-        {
-            get;
-
-            set;
-        }
+        public Rank Rank { get; set;}
 
         public Card(int rank, int suit)
         {
             this.Suit = (Suit)suit;
             this.Rank = (Rank)rank;
-        }
-
-        public int GetRankValue()
-        {
-            return (int)Rank;
         }
         
     }
@@ -257,18 +365,20 @@ namespace DailyProgrammer_Template
         /// <summary>
         /// Set the card to the player
         /// </summary>
-        /// <param name="myCards"></param>
+        /// <param name="myCards">List of cards</param>
         public void DrawHand(List<Card> myCards)
         {
             this.MyCards = myCards;
         }
 
+        /// <summary>
+        /// Calculate the sum of the card ranks
+        /// </summary>
+        /// <returns>The total rank</returns>
         public int GetRankSum()
         {
-
-            return MyCards.Sum(x => x.GetRankValue());
-        }
-
+            return MyCards.Sum(x => (int)x.Rank);
+        }        
         
     }
 
@@ -279,64 +389,96 @@ namespace DailyProgrammer_Template
     [TestFixture]
     class Test
     {
-        Player sergio = new Player("Sergio");
-        Player jim = new Player("Jim");
-        List<Player> listOfPlayers = new List<Player>();       
-        List<Card> cardS = new List<Card>();
-        List<Card> cardJ = new List<Card>();
+        Player sergio;
+        Player jim;
+        List<Player> listOfPlayers;
+
+        List<string> listStringDate;
+
+        [SetUp]
+        public void testSetup()
+        {
+            sergio = new Player("Sergio");
+            jim = new Player("Jim");
+            listOfPlayers = new List<Player>();
+
+
+            //SECOND CHALLANGE
+            listStringDate = new List<string>();
+        }
 
         //Test classes are declared with a return type of void.  Test classes also need a data annotation to mark them as a Test function
         [Test]
         public void MyValidTest()
         {
-
-            cardS.Clear();
-            cardJ.Clear();
-
-            cardS.Add(new Card((int)Rank.Ten, (int)Suit.Club));
-            cardS.Add(new Card((int)Rank.Jack, (int)Suit.Club));
-            cardS.Add(new Card((int)Rank.Ace, (int)Suit.Club));
-            sergio.DrawHand(cardS);
+            sergio.MyCards = new List<Card>();
+            sergio.MyCards.Add(new Card((int)Rank.Ten, (int)Suit.Club));
+            sergio.MyCards.Add(new Card((int)Rank.Ten, (int)Suit.Club));
+            sergio.MyCards.Add(new Card((int)Rank.Jack, (int)Suit.Club));
+            sergio.MyCards.Add(new Card((int)Rank.Ace, (int)Suit.Club));            
             listOfPlayers.Add(sergio);
 
-            cardJ.Add(new Card((int)Rank.Five, (int)Suit.Club));
-            cardJ.Add(new Card((int)Rank.Jack, (int)Suit.Club));
-            cardJ.Add(new Card((int)Rank.Two, (int)Suit.Club));
-            jim.DrawHand(cardJ);    
+            jim.MyCards = new List<Card>();
+            jim.MyCards.Add(new Card((int)Rank.Two, (int)Suit.Club));
+            jim.MyCards.Add(new Card((int)Rank.Five, (int)Suit.Club));
+            jim.MyCards.Add(new Card((int)Rank.Jack, (int)Suit.Club));
+            jim.MyCards.Add(new Card((int)Rank.Two, (int)Suit.Club));           
             listOfPlayers.Add(jim);
 
             string winner = Program.TheWinnerIs(listOfPlayers).First().Name;
             Assert.IsTrue(winner == "Jim", "Failed");
+
+
+            //SECOND CHALLENGE
+            listStringDate.Add("2012 12 02 23:02:12 ");
+            listStringDate.Add("2012 12 02 23:02:13 ");
+            listStringDate.Add("2011 12 02 23:02:12 ");
+            listStringDate.Add("2012 12 03 23:02:12 ");
+            listStringDate.Sort((a, b) => a.CompareTo(b));
+
+            string date = listStringDate[0];
+            Assert.IsTrue(date == "2011 12 02 23:02:12 ");
+            date = listStringDate[3];
+            Assert.IsTrue(date == "2012 12 03 23:02:12 ");
+
+
         }
 
         [Test]
         public void MyInvalidTest()
         {
-            cardS.Clear();
-            cardJ.Clear();
-
-            cardS.Add(new Card((int)Rank.Two, (int)Suit.Club));
-            cardS.Add(new Card((int)Rank.Three, (int)Suit.Club));
-            cardS.Add(new Card((int)Rank.Five, (int)Suit.Club));
-            cardS.Add(new Card((int)Rank.Six, (int)Suit.Club));
-            cardS.Add(new Card((int)Rank.Five, (int)Suit.Heart));
-            sergio.DrawHand(cardS);
-
-            cardJ.Add(new Card((int)Rank.Five, (int)Suit.Club));
-            cardJ.Add(new Card((int)Rank.Jack, (int)Suit.Club));
-            cardJ.Add(new Card((int)Rank.Two, (int)Suit.Club));
-            jim.DrawHand(cardJ);
-
-            listOfPlayers.Clear();
-
+            sergio.MyCards = new List<Card>();
+            sergio.MyCards.Add(new Card((int)Rank.Two, (int)Suit.Club));
+            sergio.MyCards.Add(new Card((int)Rank.Three, (int)Suit.Club));
+            sergio.MyCards.Add(new Card((int)Rank.Five, (int)Suit.Club));
+            sergio.MyCards.Add(new Card((int)Rank.Six, (int)Suit.Club));
+            sergio.MyCards.Add(new Card((int)Rank.Two, (int)Suit.Heart));            
             listOfPlayers.Add(sergio);
+
+            jim.MyCards = new List<Card>();
+            jim.MyCards.Add(new Card((int)Rank.Five, (int)Suit.Club));
+            jim.MyCards.Add(new Card((int)Rank.Jack, (int)Suit.Club));
+            jim.MyCards.Add(new Card((int)Rank.Six, (int)Suit.Club));             
             listOfPlayers.Add(jim);
 
             string winner = Program.TheWinnerIs(listOfPlayers).First().Name;
-            //int result = Program.MyTestFunction(15);
 
-
+            //Sergio wins with 5cards trick rule
             Assert.IsFalse(winner=="Jim");
+
+
+
+            //SECOND CHALLENGE
+            listStringDate.Add("2012 12 02 23:02:12 ");
+            listStringDate.Add("2012 12 02 23:02:13 ");
+            listStringDate.Add("2011 12 02 23:02:12 ");
+            listStringDate.Add("2012 12 03 23:02:12 ");
+            listStringDate.Sort((a, b) => a.CompareTo(b));
+
+            string date = listStringDate[0];
+            Assert.IsFalse(date == "2012 12 02 23:02:13");
+            date = listStringDate[3];
+            Assert.IsFalse(date == "2012 12 02 23:02:12 ");
         }
     }
 #endregion
